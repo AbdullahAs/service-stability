@@ -150,13 +150,13 @@ def summary
 end
 
 def write_to_error_file(url, response, error)
-  @errors_file.write('Error in: ')
+  @errors_file.write("Error in:")
   @errors_file.write(url)
-  @errors_file.write('Response: ')
+  @errors_file.write("\n Response: ")
   @errors_file.write(response)
-  @errors_file.write('Error Response: ')
+  @errors_file.write("\n Error Response: ")
   @errors_file.write(error)
-  @errors_file.write("================== \n\n")
+  @errors_file.write("\n ================== \n\n")
 end
 
 @errors_file = File.open('errors.txt', 'w')
