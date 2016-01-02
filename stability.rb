@@ -3,67 +3,110 @@
 require 'rest-client'
 require 'nokogiri'
 
+
+@USER_NAME = 'Jallal.m'
+@PASSWORD = 'zxzszaQWE123'
+@ACCOUNT_NUMBER = '1000153592196221'
+@MSISDN = '966543103379'
+@TRANSACTION_ID = '4414875126475261'
+@VERSION = '0.10.47'
+@DEVICE_ID = '040EC214-0B47-4807-9CE6-E6BDBE4F92CA'
+@token_authorization = "Basic SDdyblg0Q3RXSXJGZjI3Xzdscl9ualNDTDY0YTpVZUNmM3lBQnJnUkRRSGNJNmVWN0RxdGY1UG9h";
+@resonse_time = 0
+@number_of_timeouts = 0
+
 # Functionalites methods
 # 1
-def usage
-  @url = 'http://www.mobily.com.sa/sec/mobilybe/rest/usage/list'
-  request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @ACCOUNT_NUMBER, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id}
+def fbi
+  p '[[FBI REQUEST]]'
+  p @url = 'http://www.mobily.com.sa/sec/mobilybe/rest/usage/list'
+  p request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id}
   parse_json(request_body)
 end
 
 # 2
 def settings
-  @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/app/settings'
-  request_body = {"LANG":"EN","VERSION": @VERSION,"APP_ID":"Iconick_IOS","DEVICE_ID": @DEVICE_ID,"TRANSACTION_ID": @TRANSACTION_ID,"SESSION_ID": @seesion_id}
+  p '[[Settings REQUEST]]'
+  p @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/app/settings'
+  p request_body = {"LANG":"EN","VERSION": @VERSION,"APP_ID":"Iconick_IOS","DEVICE_ID": @DEVICE_ID,"TRANSACTION_ID": @TRANSACTION_ID,"SESSION_ID": @seesion_id}
   parse_json(request_body)
 end
 
 # 3
 def news
-  @url = 'https://www.mobily.com.sa/sec/notificationcenter/rest/news/list/active'
-  request_body = {"MSISDN": @MSISDN,"LANG":"EN","APP_ID":"Iconick_IOS","VERSION": @VERSION,"TRANSACTION_ID": @TRANSACTION_ID,"DEVICE_ID": @DEVICE_ID,"SESSION_ID": @seesion_id}
+  p '[[News REQUEST]]'
+  p @url = 'https://www.mobily.com.sa/sec/notificationcenter/rest/news/list/active'
+  p request_body = {"MSISDN": @MSISDN,"LANG":"EN","APP_ID":"Iconick_IOS","VERSION": @VERSION,"TRANSACTION_ID": @TRANSACTION_ID,"DEVICE_ID": @DEVICE_ID,"SESSION_ID": @seesion_id}
   parse_json(request_body)
 end
 
 # 4
 def balance
-  @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/usage/balance/credit'
-  request_body = {"MSISDN": @MSISDN,"LANG":"EN","APP_ID":"Iconick_IOS","VERSION": @VERSION,"TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @ACCOUNT_NUMBER,"DEVICE_ID": @DEVICE_ID,"SESSION_ID": @seesion_id}
+  p '[[Balance REQUEST]]'
+  p @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/usage/balance/credit'
+  p request_body = {"MSISDN": @MSISDN,"LANG":"EN","APP_ID":"Iconick_IOS","VERSION": @VERSION,"TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @ACCOUNT_NUMBER,"DEVICE_ID": @DEVICE_ID,"SESSION_ID": @seesion_id}
   parse_json(request_body)
 end
 
 # 5
-def login
-  @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/login/account'
-  request_body = {"APP_ID":"Iconick_IOS","VERSION": @VERSION,"LANG":"EN","TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @USER_NAME,"PASSWORD": @PASSWORD,"DEVICE_ID": @DEVICE_ID}
-  parse_json(request_body)
-end
-
-# 6
 def neqaty
-  @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/loyalty/info'
-  request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @ACCOUNT_NUMBER, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id}
-  parse_json(request_body)
-end
-
-# 7
-def registerDevice
-  @url = 'https://www.mobily.com.sa/sec/notificationcenter/rest/device/registerDevice'
-  request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id, "DEVICE_MODEL":"Test API (device model)","DEVICE_NAME":"Test API (device name","TOKEN":"token","DEVICE_VERSION":"iOS 9.2"}
+  p '[[Neqaty REQUEST]]'
+  p @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/loyalty/info'
+  p request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @ACCOUNT_NUMBER, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id}
   parse_json(request_body)
 end
 
 
+
+# ===============
+
+# Get Token
 def token
   @url = 'https://www.mobily.com.sa/token'
-  request_body = {}
+  p '(Token Request)'
+  p request_body = "grant_type=client_credentials&scope=LOGIN"
+  begin
+    response = RestClient.post @url , request_body, {content_type: "application/x-www-form-urlencoded; charset=utf-8", Authorization: @token_authorization}
+  rescue RestClient::ExceptionWithResponse => err
+    p '#### TOKEN ERROR ####'
+    p err.response
+  end
+  p '(Token Response)'
+  p token_details = JSON.parse(response)
+  @authorization_code = "Bearer " + token_details['access_token']
+end
+
+# get sesttion id
+def login
+  @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/login/account'
+  p '(login request)'
+  p request_body = {"APP_ID":"Iconick_IOS","VERSION": @VERSION,"LANG":"EN","TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @USER_NAME,"PASSWORD": @PASSWORD,"DEVICE_ID": @DEVICE_ID}
+  begin
+    response = RestClient.post @url , request_body.to_json, {content_type: :json, accept: :json , Authorization: @authorization_code}
+  rescue RestClient::ExceptionWithResponse => err
+    p '====== LOGIN ERROR ======'
+    p err.response
+  end
+  p '(Login Response)'
+  p login_details = JSON.parse(response)
+  @seesion_id = login_details["LOGIN_OUTPUT"]["SESSION_ID"]
+  @access_token =  "Bearer " + login_details["LOGIN_OUTPUT"]["ACCESS_TOKEN"]
+end
+
+def registerDevice
+  p '[[Register Device REQUEST]]'
+  p @url = 'https://www.mobily.com.sa/sec/notificationcenter/rest/device/registerDevice'
+  p request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id, "DEVICE_MODEL":"Test API (device model)","DEVICE_NAME":"Test API (device name","TOKEN":"token","DEVICE_VERSION":"iOS 9.2"}
   parse_json(request_body)
 end
+
+# ===============
 
 # Parse the JSON response
 def parse_json(request_body)
   begin
-    response = RestClient.post @url , request_body.to_json, {content_type: :json, accept: :json , Authorization: @authorization_code}
+    p '[[RESPONSE]]'
+    response = RestClient.post @url , request_body.to_json, {content_type: :json, accept: :json , Authorization: @access_token}
   rescue RestClient::ExceptionWithResponse => err
     p '#### ERROR ####'
     p err.response
@@ -73,17 +116,19 @@ def parse_json(request_body)
 end
 
 def start
+  token
+  login
   @number_of_requests = 0
-  while @number_of_requests < 100
+  while @number_of_requests <= 100
     time_first = Time.now
     p Time.now
     p "try #{@number_of_requests}, hitting: #{@url}"
     # service name
-    usage
-    # neqaty
-    # settings
-    # news
-    # balance
+    fbi
+    neqaty
+    settings
+    news
+    balance
     # login
     # registerDevice
     res_time = Time.now - time_first
@@ -103,17 +148,7 @@ def summary
   p '==========================================================================================================================='
 end
 
-@USER_NAME = '966546964160'
-@PASSWORD = 'Mobily123'
-@ACCOUNT_NUMBER = '1000153592196221'
-@MSISDN = '966546964160'
-@TRANSACTION_ID = '1043208260101229'
-@VERSION = '0.10.47'
-@DEVICE_ID = '040EC214-0B47-4807-9CE6-E6BDBE4F92CA'
-@seesion_id = '351949'
-@authorization_code = 'Bearer 813f98e5c671abfc779ac19df9311ad'
-@resonse_time = 0
-@number_of_timeouts = 0
 start
 summary
+
 
