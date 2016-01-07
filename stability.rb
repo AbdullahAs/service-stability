@@ -126,10 +126,10 @@ def start
     p "try #{@number_of_requests}, hitting: #{@url}"
     # service name
     fbi
-    neqaty
-    settings
-    news
-    balance
+    # neqaty
+    # settings
+    # news
+    # balance
     # login
     # registerDevice
     res_time = Time.now - time_first
@@ -159,7 +159,7 @@ def write_to_error_file(url, response, error)
   @errors_file.write("================== \n\n")
 end
 
-@errors_file = File.open('errors.txt', 'w')
+@errors_file = File.open('errors2.txt', 'w')
 start
 summary
 @errors_file.close
