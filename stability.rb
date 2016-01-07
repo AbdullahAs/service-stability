@@ -8,7 +8,7 @@ require 'nokogiri'
 @PASSWORD = 'zxzszaQWE123'
 @ACCOUNT_NUMBER = '1000153592196221'
 @MSISDN = '966543103379'
-@TRANSACTION_ID = '4414875126475261'
+@TRANSACTION_ID = 1111111111111111
 @VERSION = '0.10.47'
 @DEVICE_ID = '040EC214-0B47-4807-9CE6-E6BDBE4F92CA'
 @token_authorization = "Basic SDdyblg0Q3RXSXJGZjI3Xzdscl9ualNDTDY0YTpVZUNmM3lBQnJnUkRRSGNJNmVWN0RxdGY1UG9h";
@@ -108,7 +108,7 @@ def parse_json(request_body)
     p '[[RESPONSE]]'
     response = RestClient.post @url , request_body.to_json, {content_type: :json, accept: :json , Authorization: @access_token}
   rescue RestClient::ExceptionWithResponse => err
-    p '#### ERROR ####'
+    p '###################### ERROR #####################'
     p err.response
     write_to_error_file(@url, response, err.response)
     @number_of_timeouts += 1
@@ -137,6 +137,7 @@ def start
     p "resonse time = #{res_time} sec"
     p '==========================================================================================================================='
     @number_of_requests += 1
+    @TRANSACTION_ID += 1
   end
 end
 
@@ -150,16 +151,14 @@ def summary
 end
 
 def write_to_error_file(url, response, error)
-  @errors_file.write('Error in: ')
+  @errors_file.write("Error in:")
   @errors_file.write(url)
-  @errors_file.write('Response: ')
-  @errors_file.write(response)
-  @errors_file.write('Error Response: ')
+  @errors_file.write("\n Error Response: ")
   @errors_file.write(error)
-  @errors_file.write("================== \n\n")
+  @errors_file.write("\n ================== \n\n")
 end
 
-@errors_file = File.open('errors2.txt', 'w')
+@errors_file = File.open('errors.txt', 'w')
 start
 summary
 @errors_file.close
