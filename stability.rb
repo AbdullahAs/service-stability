@@ -118,13 +118,13 @@ def start
   token
   login
   @number_of_requests = 0
-  while @number_of_requests <= 500
+  while @number_of_requests <= 50
     time_first = Time.now
     p Time.now
     p "try #{@number_of_requests}, hitting: #{@url}"
     # service name
     fbi
-    # neqaty
+    neqaty
     # settings
     # news
     balance
@@ -144,13 +144,15 @@ def summary
   p "API: #{@url}"
   p "Number of Requests: #{@number_of_requests}"
   p "Number of Errors/Timeouts: #{@number_of_timeouts}"
-  p "Avg Response Time: #{@resonse_time/500}"
+  p "Avg Response Time: #{@resonse_time/50}"
   p '==========================================================================================================================='
 end
 
 def write_to_error_file(url, response, error)
   @errors_file.write("Error in:")
   @errors_file.write(url)
+  @errors_file.write("\n TRANSACTION_ID:")
+  @errors_file.write(TRANSACTION_ID)
   @errors_file.write("\n Error Response: ")
   @errors_file.write(error)
   @errors_file.write("\n ================== \n\n")
