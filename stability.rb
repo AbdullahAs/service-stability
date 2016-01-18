@@ -2,13 +2,13 @@
 
 require 'rest-client'
 require 'nokogiri'
+require 'colorize'
 
-
-@USER_NAME = 'Jallal.m'
-@PASSWORD = 'zxzszaQWE123'
+@USER_NAME = 'mobilyapp'
+@PASSWORD = 'Mobily123'
 @ACCOUNT_NUMBER = '1000153592196221'
-@MSISDN = '966543103379'
-@TRANSACTION_ID = 9991111111111111
+@MSISDN = '966544900282'
+@TRANSACTION_ID = 9999111111111111
 @VERSION = '0.10.47'
 @DEVICE_ID = '040EC214-0B47-4807-9CE6-E6BDBE4F92CA'
 @token_authorization = "Basic SDdyblg0Q3RXSXJGZjI3Xzdscl9ualNDTDY0YTpVZUNmM3lBQnJnUkRRSGNJNmVWN0RxdGY1UG9h";
@@ -18,7 +18,7 @@ require 'nokogiri'
 # Functionalites methods
 # 1
 def fbi
-  p '[[FBI REQUEST]]'
+  puts '[[FBI REQUEST]]'.yellow
   p @url = 'http://www.mobily.com.sa/sec/mobilybe/rest/usage/list'
   p request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id}
   parse_json(request_body)
@@ -26,7 +26,7 @@ end
 
 # 2
 def settings
-  p '[[Settings REQUEST]]'
+  puts '[[Settings REQUEST]]'.yellow
   p @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/app/settings'
   p request_body = {"LANG":"EN","VERSION": @VERSION,"APP_ID":"Iconick_IOS","DEVICE_ID": @DEVICE_ID,"TRANSACTION_ID": @TRANSACTION_ID,"SESSION_ID": @seesion_id}
   parse_json(request_body)
@@ -34,7 +34,7 @@ end
 
 # 3
 def news
-  p '[[News REQUEST]]'
+  puts '[[News REQUEST]]'.yellow
   p @url = 'https://www.mobily.com.sa/sec/notificationcenter/rest/news/list/active'
   p request_body = {"MSISDN": @MSISDN,"LANG":"EN","APP_ID":"Iconick_IOS","VERSION": @VERSION,"TRANSACTION_ID": @TRANSACTION_ID,"DEVICE_ID": @DEVICE_ID,"SESSION_ID": @seesion_id}
   parse_json(request_body)
@@ -42,7 +42,7 @@ end
 
 # 4
 def balance
-  p '[[Balance REQUEST]]'
+  puts '[[Balance REQUEST]]'.yellow
   p @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/usage/balance/credit'
   p request_body = {"MSISDN": @MSISDN,"LANG":"EN","APP_ID":"Iconick_IOS","VERSION": @VERSION,"TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @ACCOUNT_NUMBER,"DEVICE_ID": @DEVICE_ID,"SESSION_ID": @seesion_id}
   parse_json(request_body)
@@ -50,8 +50,16 @@ end
 
 # 5
 def neqaty
-  p '[[Neqaty REQUEST]]'
+  puts '[[Neqaty REQUEST]]'.yellow
   p @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/loyalty/info'
+  p request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @ACCOUNT_NUMBER, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id}
+  parse_json(request_body)
+end
+
+# 6
+def outstanding
+  puts '[[Neqaty REQUEST]]'.yellow
+  p @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/usage/balance/outstanding'
   p request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @ACCOUNT_NUMBER, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id}
   parse_json(request_body)
 end
@@ -61,15 +69,15 @@ end
 # Get Token
 def token
   @url = 'https://www.mobily.com.sa/token'
-  p '(Token Request)'
+  puts '(Token Request)'.yellow
   p request_body = "grant_type=client_credentials&scope=LOGIN"
   begin
     response = RestClient.post @url , request_body, {content_type: "application/x-www-form-urlencoded; charset=utf-8", Authorization: @token_authorization}
   rescue RestClient::ExceptionWithResponse => err
-    p '#### TOKEN ERROR ####'
+    puts '#### TOKEN ERROR ####'.red
     p err.response
   end
-  p '(Token Response)'
+  puts '(Token Response)'.yellow
   p token_details = JSON.parse(response)
   @authorization_code = "Bearer " + token_details['access_token']
 end
@@ -77,22 +85,22 @@ end
 # get sesttion id
 def login
   @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/login/account'
-  p '(login request)'
+  puts '(login request)'.yellow
   p request_body = {"APP_ID":"Iconick_IOS","VERSION": @VERSION,"LANG":"EN","TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @USER_NAME,"PASSWORD": @PASSWORD,"DEVICE_ID": @DEVICE_ID}
   begin
     response = RestClient.post @url , request_body.to_json, {content_type: :json, accept: :json , Authorization: @authorization_code}
   rescue RestClient::ExceptionWithResponse => err
-    p '====== LOGIN ERROR ======'
+    puts '====== LOGIN ERROR ======'.red
     p err.response
   end
-  p '(Login Response)'
+  puts '(Login Response)'.yellow
   p login_details = JSON.parse(response)
   @seesion_id = login_details["LOGIN_OUTPUT"]["SESSION_ID"]
   @access_token =  "Bearer " + login_details["LOGIN_OUTPUT"]["ACCESS_TOKEN"]
 end
 
 def registerDevice
-  p '[[Register Device REQUEST]]'
+  p '[[Register Device REQUEST]]'.yellow
   p @url = 'https://www.mobily.com.sa/sec/notificationcenter/rest/device/registerDevice'
   p request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id, "DEVICE_MODEL":"Test API (device model)","DEVICE_NAME":"Test API (device name","TOKEN":"token","DEVICE_VERSION":"iOS 9.2"}
   parse_json(request_body)
@@ -103,10 +111,10 @@ end
 # Parse the JSON response
 def parse_json(request_body)
   begin
-    p '[[RESPONSE]]'
+    puts '-RESPONSE-'.yellow
     response = RestClient.post @url , request_body.to_json, {content_type: :json, accept: :json , Authorization: @access_token}
   rescue RestClient::ExceptionWithResponse => err
-    p '###################### ERROR #####################'
+    puts '###################### ERROR #####################'.red
     p err.response
     write_to_error_file(@url, response, err.response)
     @number_of_timeouts += 1
@@ -123,11 +131,12 @@ def start
     p Time.now
     p "try #{@number_of_requests}, hitting: #{@url}"
     # service name
-    # fbi
-    # neqaty
+    fbi
+    neqaty
     # settings
     # news
     balance
+    outstanding
     # login
     # registerDevice
     res_time = Time.now - time_first
@@ -151,6 +160,8 @@ end
 def write_to_error_file(url, response, error)
   @errors_file.write("Error in:")
   @errors_file.write(url)
+  @errors_file.write("\n TRANSACTION_ID:")
+  @errors_file.write(@TRANSACTION_ID)
   @errors_file.write("\n Error Response: ")
   @errors_file.write(error)
   @errors_file.write("\n ================== \n\n")
