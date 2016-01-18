@@ -8,7 +8,7 @@ require 'nokogiri'
 @PASSWORD = 'zxzszaQWE123'
 @ACCOUNT_NUMBER = '1000153592196221'
 @MSISDN = '966543103379'
-@TRANSACTION_ID = 1111111111111111
+@TRANSACTION_ID = 9991111111111111
 @VERSION = '0.10.47'
 @DEVICE_ID = '040EC214-0B47-4807-9CE6-E6BDBE4F92CA'
 @token_authorization = "Basic SDdyblg0Q3RXSXJGZjI3Xzdscl9ualNDTDY0YTpVZUNmM3lBQnJnUkRRSGNJNmVWN0RxdGY1UG9h";
@@ -55,8 +55,6 @@ def neqaty
   p request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @ACCOUNT_NUMBER, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id}
   parse_json(request_body)
 end
-
-
 
 # ===============
 
@@ -125,11 +123,11 @@ def start
     p Time.now
     p "try #{@number_of_requests}, hitting: #{@url}"
     # service name
-    fbi
+    # fbi
     # neqaty
     # settings
     # news
-    # balance
+    balance
     # login
     # registerDevice
     res_time = Time.now - time_first
