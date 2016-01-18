@@ -118,7 +118,7 @@ def start
   token
   login
   @number_of_requests = 0
-  while @number_of_requests <= 100
+  while @number_of_requests <= 500
     time_first = Time.now
     p Time.now
     p "try #{@number_of_requests}, hitting: #{@url}"
@@ -144,7 +144,7 @@ def summary
   p "API: #{@url}"
   p "Number of Requests: #{@number_of_requests}"
   p "Number of Errors/Timeouts: #{@number_of_timeouts}"
-  p "Avg Response Time: #{@resonse_time/100}"
+  p "Avg Response Time: #{@resonse_time/500}"
   p '==========================================================================================================================='
 end
 
