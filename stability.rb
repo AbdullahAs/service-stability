@@ -178,7 +178,8 @@ def write_to_error_file(url, response, error)
   @errors_file.write("\n ================== \n\n")
 end
 
-@errors_file = File.open('errors.txt', 'w')
+
+@errors_file = File.open("errors_log_#{Time.now.to_i}.txt", 'w')
 start
 summary
 @errors_file.close
