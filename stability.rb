@@ -8,18 +8,29 @@ require 'colorize'
 @PASSWORD = 'Mobily123'
 @ACCOUNT_NUMBER = '1000153592196221'
 @MSISDN = '966544900282'
-@TRANSACTION_ID = 9999111111111111
+@TRANSACTION_ID = 8899111111111111
 @VERSION = '0.10.47'
 @DEVICE_ID = '040EC214-0B47-4807-9CE6-E6BDBE4F92CA'
 @token_authorization = "Basic SDdyblg0Q3RXSXJGZjI3Xzdscl9ualNDTDY0YTpVZUNmM3lBQnJnUkRRSGNJNmVWN0RxdGY1UG9h";
 @resonse_time = 0
 @number_of_timeouts = 0
+@total_number_of_requests = 2
 
+# Levels
+@public = "https://www.mobily.com.sa/sec"
+@BE_1 = "http://10.64.98.75:9080"
+@BE_2 = "http://10.64.98.72:9080"
+@WSO2_1 = "http://10.64.246.209:8280/sec"
+@WSO2_2 = "http://10.64.246.210:8280/sec"
+@http_1 = "http://10.64.250.8:80/sec"
+@http_1 = "http://10.64.250.9:80/sec"
+
+@level = @public
 # Functionalites methods
 # 1
 def fbi
   puts '[[FBI REQUEST]]'.yellow
-  p @url = 'http://www.mobily.com.sa/sec/mobilybe/rest/usage/list'
+  p @url = "#{@level}/mobilybe/rest/usage/list"
   p request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id}
   parse_json(request_body)
 end
@@ -27,7 +38,7 @@ end
 # 2
 def settings
   puts '[[Settings REQUEST]]'.yellow
-  p @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/app/settings'
+  p @url = "#{@level}/mobilybe/rest/app/settings"
   p request_body = {"LANG":"EN","VERSION": @VERSION,"APP_ID":"Iconick_IOS","DEVICE_ID": @DEVICE_ID,"TRANSACTION_ID": @TRANSACTION_ID,"SESSION_ID": @seesion_id}
   parse_json(request_body)
 end
@@ -35,7 +46,7 @@ end
 # 3
 def news
   puts '[[News REQUEST]]'.yellow
-  p @url = 'https://www.mobily.com.sa/sec/notificationcenter/rest/news/list/active'
+  p @url = "#{@level}/notificationcenter/rest/news/list/active"
   p request_body = {"MSISDN": @MSISDN,"LANG":"EN","APP_ID":"Iconick_IOS","VERSION": @VERSION,"TRANSACTION_ID": @TRANSACTION_ID,"DEVICE_ID": @DEVICE_ID,"SESSION_ID": @seesion_id}
   parse_json(request_body)
 end
@@ -43,7 +54,7 @@ end
 # 4
 def balance
   puts '[[Balance REQUEST]]'.yellow
-  p @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/usage/balance/credit'
+  p @url = "#{@level}/mobilybe/rest/usage/balance/credit"
   p request_body = {"MSISDN": @MSISDN,"LANG":"EN","APP_ID":"Iconick_IOS","VERSION": @VERSION,"TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @ACCOUNT_NUMBER,"DEVICE_ID": @DEVICE_ID,"SESSION_ID": @seesion_id}
   parse_json(request_body)
 end
@@ -51,7 +62,7 @@ end
 # 5
 def neqaty
   puts '[[Neqaty REQUEST]]'.yellow
-  p @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/loyalty/info'
+  p @url = "#{@level}/mobilybe/rest/loyalty/info"
   p request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @ACCOUNT_NUMBER, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id}
   parse_json(request_body)
 end
@@ -59,7 +70,7 @@ end
 # 6
 def outstanding
   puts '[[Neqaty REQUEST]]'.yellow
-  p @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/usage/balance/outstanding'
+  p @url = "#{@level}/mobilybe/rest/usage/balance/outstanding"
   p request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @ACCOUNT_NUMBER, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id}
   parse_json(request_body)
 end
@@ -126,23 +137,23 @@ def start
   token
   login
   @number_of_requests = 0
-  while @number_of_requests <= 500
+  while @number_of_requests <= @total_number_of_requests
     time_first = Time.now
     p Time.now
     p "try #{@number_of_requests}, hitting: #{@url}"
     # service name
-    # fbi
-    neqaty
+
+    fbi
+    # neqaty
     # settings
     # news
     # balance
     # outstanding
-    # login
-    # registerDevice
+
     res_time = Time.now - time_first
     @resonse_time  += res_time
     p "resonse time = #{res_time} sec"
-    p '==========================================================================================================================='
+    puts '========================================================================================================'.yellow
     @number_of_requests += 1
     @TRANSACTION_ID += 1
   end
@@ -150,11 +161,13 @@ end
 
 # Print a summary of the result at the end of the execution
 def summary
-  p "API: #{@url}"
-  p "Number of Requests: #{@number_of_requests}"
-  p "Number of Errors/Timeouts: #{@number_of_timeouts}"
-  p "Avg Response Time: #{@resonse_time/500}"
-  p '==========================================================================================================================='
+  @errors_file.write "\n =Summary="
+  @errors_file.write "\n =========================================================================================================="
+  @errors_file.write "\n API: #{@url}"
+  @errors_file.write "\n Number of Requests: #{@number_of_requests}"
+  @errors_file.write "\n Number of Errors/Timeouts: #{@number_of_timeouts}"
+  @errors_file.write "\n Avg Response Time: #{@resonse_time/@total_number_of_requests}"
+  @errors_file.write "\n =========================================================================================================="
 end
 
 def write_to_error_file(url, response, error)
@@ -167,7 +180,8 @@ def write_to_error_file(url, response, error)
   @errors_file.write("\n ================== \n\n")
 end
 
-@errors_file = File.open('errors.txt', 'w')
+
+@errors_file = File.open("log/errors_log_#{Time.now.to_i}.txt", 'w')
 start
 summary
 @errors_file.close
