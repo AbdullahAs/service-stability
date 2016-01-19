@@ -131,12 +131,12 @@ def start
     p Time.now
     p "try #{@number_of_requests}, hitting: #{@url}"
     # service name
-    fbi
+    # fbi
     neqaty
     # settings
     # news
-    balance
-    outstanding
+    # balance
+    # outstanding
     # login
     # registerDevice
     res_time = Time.now - time_first
