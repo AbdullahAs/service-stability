@@ -8,13 +8,17 @@ require 'colorize'
 @PASSWORD = 'Mobily123'
 @ACCOUNT_NUMBER = '1000153592196221'
 @MSISDN = '966544900282'
+@MSISDN = '966554646181' #pre
 @TRANSACTION_ID = 8899111111111111
 @VERSION = '0.10.47'
 @DEVICE_ID = '040EC214-0B47-4807-9CE6-E6BDBE4F92CA'
 @token_authorization = "Basic SDdyblg0Q3RXSXJGZjI3Xzdscl9ualNDTDY0YTpVZUNmM3lBQnJnUkRRSGNJNmVWN0RxdGY1UG9h";
+
 @resonse_time = 0
 @number_of_timeouts = 0
-@total_number_of_requests = 2
+@total_number_of_requests = 20
+@max_resonse_time = 0
+@min_resonse_time = 100
 
 # Levels
 @public = "https://www.mobily.com.sa/sec"
@@ -147,10 +151,12 @@ def start
     # neqaty
     # settings
     # news
-    # balance
+    balance
     # outstanding
 
     res_time = Time.now - time_first
+    @max_resonse_time = res_time if res_time > @max_resonse_time
+    @min_resonse_time = res_time if res_time < @min_resonse_time
     @resonse_time  += res_time
     p "resonse time = #{res_time} sec"
     puts '========================================================================================================'.yellow
@@ -164,9 +170,12 @@ def summary
   @errors_file.write "\n =Summary="
   @errors_file.write "\n =========================================================================================================="
   @errors_file.write "\n API: #{@url}"
-  @errors_file.write "\n Number of Requests: #{@number_of_requests}"
+  @errors_file.write "\n MSISDN: #{@MSISDN}"
+  @errors_file.write "\n Number of Requests: #{@number_of_requests-1}"
   @errors_file.write "\n Number of Errors/Timeouts: #{@number_of_timeouts}"
   @errors_file.write "\n Avg Response Time: #{@resonse_time/@total_number_of_requests}"
+  @errors_file.write "\n Max Response Time: #{@max_resonse_time}"
+  @errors_file.write "\n Max Response Time: #{@min_resonse_time}"
   @errors_file.write "\n =========================================================================================================="
 end
 
