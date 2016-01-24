@@ -151,7 +151,7 @@ def start
     # neqaty
     # settings
     # news
-    balance
+    # balance
     # outstanding
 
     res_time = Time.now - time_first
@@ -177,6 +177,20 @@ def summary
   @errors_file.write "\n Max Response Time: #{@max_resonse_time}"
   @errors_file.write "\n Max Response Time: #{@min_resonse_time}"
   @errors_file.write "\n =========================================================================================================="
+  summary_print
+end
+
+def summary_print
+  p "=Summary="
+  puts "==========================================================================================================".yellow
+  p "API: #{@url}"
+  p "MSISDN: #{@MSISDN}"
+  p "Number of Requests: #{@number_of_requests-1}"
+  p "Number of Errors/Timeouts: #{@number_of_timeouts}"
+  p "Avg Response Time: #{@resonse_time/@total_number_of_requests}"
+  p "Max Response Time: #{@max_resonse_time}"
+  p "Max Response Time: #{@min_resonse_time}"
+  puts "==========================================================================================================".yellow
 end
 
 def write_to_error_file(url, response, error)
@@ -188,7 +202,6 @@ def write_to_error_file(url, response, error)
   @errors_file.write(error)
   @errors_file.write("\n ================== \n\n")
 end
-
 
 @errors_file = File.open("log/errors_log_#{Time.now.to_i}.txt", 'w')
 start
