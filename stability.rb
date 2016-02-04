@@ -3,20 +3,22 @@
 require 'rest-client'
 require 'nokogiri'
 require 'colorize'
+# require 'sinatra'
+# configure { set :server, :puma }
 
 @USER_NAME = 'mobilyapp'
 @PASSWORD = 'Mobily123'
-@ACCOUNT_NUMBER = '1000153592196221'
-@MSISDN = '966544900282'
-@MSISDN = '966554646181' #pre
+@ACCOUNT_NUMBER = 'Mobilyapp'
+@MSISDN = '966546977208'
+# @MSISDN = '966554646181' #pre
 @TRANSACTION_ID = 8899111111111111
-@VERSION = '0.10.47'
-@DEVICE_ID = '040EC214-0B47-4807-9CE6-E6BDBE4F92CA'
+@VERSION = '2.10.57'
+@DEVICE_ID = 'D191C2F1-5A23-4F55-B379-B6C89B3E66EF'
 @token_authorization = "Basic SDdyblg0Q3RXSXJGZjI3Xzdscl9ualNDTDY0YTpVZUNmM3lBQnJnUkRRSGNJNmVWN0RxdGY1UG9h";
 
 @resonse_time = 0
 @number_of_timeouts = 0
-@total_number_of_requests = 20
+@total_number_of_requests = 100
 @max_resonse_time = 0
 @min_resonse_time = 100
 
@@ -79,6 +81,14 @@ def outstanding
   parse_json(request_body)
 end
 
+# 7
+def banner
+  puts '[[Banner REQUEST]]'.yellow
+  p @url = "#{@level}/mobilybe/rest/oth/banner/list"
+  p request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @ACCOUNT_NUMBER, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id}
+  parse_json(request_body)
+end
+
 # ===============
 
 # Get Token
@@ -103,7 +113,7 @@ def login
   puts '(login request)'.yellow
   p request_body = {"APP_ID":"Iconick_IOS","VERSION": @VERSION,"LANG":"EN","TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @USER_NAME,"PASSWORD": @PASSWORD,"DEVICE_ID": @DEVICE_ID}
   begin
-    response = RestClient.post @url , request_body.to_json, {content_type: :json, accept: :json , Authorization: @authorization_code}
+    response = RestClient.post @url , request_body.to_json, {content_type: :json, accept: :json , Authorization: 'db42893ea5e6b46511d39bb721bf587z'}
   rescue RestClient::ExceptionWithResponse => err
     puts '====== LOGIN ERROR ======'.red
     p err.response
@@ -138,7 +148,7 @@ def parse_json(request_body)
 end
 
 def start
-  token
+  # token
   login
   @number_of_requests = 0
   while @number_of_requests <= @total_number_of_requests
@@ -152,7 +162,8 @@ def start
     # settings
     # news
     # balance
-    # outstanding
+    outstanding
+    # banner
 
     res_time = Time.now - time_first
     @max_resonse_time = res_time if res_time > @max_resonse_time
