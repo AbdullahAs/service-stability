@@ -9,7 +9,7 @@ require 'colorize'
 @USER_NAME = 'mobilyapp'
 @PASSWORD = 'Mobily123'
 @ACCOUNT_NUMBER = 'Mobilyapp'
-@MSISDN = '966546977208'
+@MSISDN = '966565511336'
 # @MSISDN = '966554646181' #pre
 @TRANSACTION_ID = 8899111111111111
 @VERSION = '2.10.57'
@@ -23,7 +23,7 @@ require 'colorize'
 @min_resonse_time = 100
 
 # Levels
-@public = "https://www.mobily.com.sa/sec"
+@public = "https://www.mobily.com.sa"
 @BE_1 = "http://10.64.98.75:9080"
 @BE_2 = "http://10.64.98.72:9080"
 @WSO2_1 = "http://10.64.246.209:8280/sec"
@@ -109,7 +109,7 @@ end
 
 # get sesttion id
 def login
-  @url = 'https://www.mobily.com.sa/sec/mobilybe/rest/login/account'
+  @url = 'https://www.mobily.com.sa/mobilybe/rest/login/account'
   puts '(login request)'.yellow
   p request_body = {"APP_ID":"Iconick_IOS","VERSION": @VERSION,"LANG":"EN","TRANSACTION_ID": @TRANSACTION_ID,"USER_NAME": @USER_NAME,"PASSWORD": @PASSWORD,"DEVICE_ID": @DEVICE_ID}
   begin
@@ -126,7 +126,7 @@ end
 
 def registerDevice
   p '[[Register Device REQUEST]]'.yellow
-  p @url = 'https://www.mobily.com.sa/sec/notificationcenter/rest/device/registerDevice'
+  p @url = 'https://www.mobily.com.sa/notificationcenter/rest/device/registerDevice'
   p request_body = {MSISDN: @MSISDN, "LANG":"EN", "APP_ID":"Iconick_IOS", "VERSION": @VERSION, "TRANSACTION_ID": @TRANSACTION_ID, "DEVICE_ID": @DEVICE_ID, "SESSION_ID": @seesion_id, "DEVICE_MODEL":"Test API (device model)","DEVICE_NAME":"Test API (device name","TOKEN":"token","DEVICE_VERSION":"iOS 9.2"}
   parse_json(request_body)
 end
@@ -158,11 +158,11 @@ def start
     # service name
 
     fbi
-    # neqaty
+    neqaty
     # settings
     # news
     # balance
-    outstanding
+    # outstanding
     # banner
 
     res_time = Time.now - time_first
